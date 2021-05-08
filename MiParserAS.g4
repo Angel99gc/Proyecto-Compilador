@@ -5,10 +5,10 @@ options {
 }
 
 program                         :   (statement)*                                                    #Program_AST;
-statement                       :   type ID (EQUAL expression)? PyCOMA                              #VariableDecl_State_AST
+statement                       :   type identifier (EQUAL expression)? PyCOMA                              #VariableDecl_State_AST
                                 |   CLASS ID CIZQ (classVariableDeclaration)* CDER PyCOMA           #ClassDecl_State_AST
-                                |   ID (POINT ID)? EQUAL expression PyCOMA                          #Assignment_State_AST
-	                            |   ID PCIZQ expression PCDER EQUAL expression PyCOMA               #ArrayAssign_State_AST
+                                |   identifier (POINT ID)? EQUAL expression PyCOMA                  #Assignment_State_AST
+	                            |   identifier PCIZQ expression PCDER EQUAL expression PyCOMA       #ArrayAssign_State_AST
                                 |   PRINT expression PyCOMA                                         #PrintStat_State_AST
                                 |   IF PIZQ expression PDER block (ELSE block)?                     #IfStat_State_AST
                                 |   WHILE PIZQ expression PDER block                                #WhileStat_State_AST
@@ -18,7 +18,7 @@ statement                       :   type ID (EQUAL expression)? PyCOMA          
 block                           :   CIZQ (statement)* CDER                                          #Block_AST;
 formalParams                    :   formalParam (COMA formalParam)*                                 #FormalParams_AST;
 formalParam                     :   type ID                                                         #FormalParam_AST;
-classVariableDeclaration        :   simpleType ID (EQUAL expression)?                               #ClassVarDecl_AST;
+classVariableDeclaration        :   simpleType ID (EQUAL expression)? PyCOMA                        #ClassVarDecl_AST;
 type                            :   simpleType                                                      #SimpleT_T_AST
                                 |   simpleType PCIZQ PCDER                                          #ArrayT_T_AST
                                 |   ID                                                              #ID_T_AST;
@@ -51,7 +51,11 @@ additiveOp                      :   SUM
 multiplicativeOp                :   MUL
                                 |   DIV
                                 |   AND                                                             #BlockMult_AST;
+identifier
+        locals [ParserRuleContext decl=null]
+                                : ID                                                                #Id_Ident_AST;
 literal                         :   NUM                                                             #IntLit_Lit_AST
+                                |   CHARS                                                           #CharLit_Lit_AST
                                 |   realLiteral                                                     #RealLit_Lit_AST
                                 |   boolLiteral                                                     #BoolLit_Lit_AST
                                 |   QMARK (printable)* QMARK                                        #StringLit_Lit_AST;

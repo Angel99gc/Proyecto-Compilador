@@ -252,12 +252,26 @@ public interface MiParserASVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMultiplicativeOp(MiParserAS.MultiplicativeOpContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code Id_Ident_AST}
+	 * labeled alternative in {@link MiParserAS#identifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitId_Ident_AST(MiParserAS.Id_Ident_ASTContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code IntLit_Lit_AST}
 	 * labeled alternative in {@link MiParserAS#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitIntLit_Lit_AST(MiParserAS.IntLit_Lit_ASTContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code CharLit_Lit_AST}
+	 * labeled alternative in {@link MiParserAS#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCharLit_Lit_AST(MiParserAS.CharLit_Lit_ASTContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code RealLit_Lit_AST}
 	 * labeled alternative in {@link MiParserAS#literal}.
