@@ -1,4 +1,4 @@
-package com.team.Proyecto.Compilador;
+package com.example.ProyectoCompilador;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
