@@ -88,6 +88,20 @@ public interface MiParserASVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlock_State_AST(MiParserAS.Block_State_ASTContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code FunctionStat_AST}
+	 * labeled alternative in {@link MiParserAS#funcionCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionStat_AST(MiParserAS.FunctionStat_ASTContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ClassDecl_AST}
+	 * labeled alternative in {@link MiParserAS#classCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassDecl_AST(MiParserAS.ClassDecl_ASTContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Block_AST}
 	 * labeled alternative in {@link MiParserAS#block}.
 	 * @param ctx the parse tree

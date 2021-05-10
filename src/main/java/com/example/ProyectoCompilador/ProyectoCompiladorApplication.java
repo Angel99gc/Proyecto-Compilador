@@ -42,8 +42,8 @@ public class ProyectoCompiladorApplication {
             try {
                 tree = parser.program();
                 ContextualAnalysis ac = new ContextualAnalysis();
-                ac.table.openScope();
                 ac.visit(tree);
+                ac.table.imprimir();
             } catch (RecognitionException e) {
                 System.out.println("Error!!!");
                 e.printStackTrace();

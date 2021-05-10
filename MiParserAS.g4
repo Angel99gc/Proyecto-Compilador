@@ -5,20 +5,28 @@ options {
 }
 
 program                         :   (statement)*                                                    #Program_AST;
-statement                       :   type identifier (EQUAL expression)? PyCOMA                              #VariableDecl_State_AST
-                                |   CLASS ID CIZQ (classVariableDeclaration)* CDER PyCOMA           #ClassDecl_State_AST
+statement                       :   type identifier (EQUAL expression)? PyCOMA                      #VariableDecl_State_AST
+                                |   classCall                                                       #ClassDecl_State_AST
                                 |   identifier (POINT ID)? EQUAL expression PyCOMA                  #Assignment_State_AST
 	                            |   identifier PCIZQ expression PCDER EQUAL expression PyCOMA       #ArrayAssign_State_AST
                                 |   PRINT expression PyCOMA                                         #PrintStat_State_AST
                                 |   IF PIZQ expression PDER block (ELSE block)?                     #IfStat_State_AST
                                 |   WHILE PIZQ expression PDER block                                #WhileStat_State_AST
                                 |   RETURN expression PyCOMA                                        #ReturnStat_State_AST
-                                |   type ID PIZQ (formalParams)? PDER block                         #FunctionStat_State_AST
+                                |   funcionCall                                                     #FunctionStat_State_AST
                                 |   block                                                           #Block_State_AST;
+funcionCall
+        locals [ParserRuleContext decl=null]
+                                :   type identifier PIZQ (formalParams)? PDER block                 #FunctionStat_AST;
+classCall
+        locals [ParserRuleContext decl=null]
+                                :   CLASS identifier CIZQ (classVariableDeclaration)* CDER PyCOMA   #ClassDecl_AST;
 block                           :   CIZQ (statement)* CDER                                          #Block_AST;
-formalParams                    :   formalParam (COMA formalParam)*                                 #FormalParams_AST;
-formalParam                     :   type ID                                                         #FormalParam_AST;
-classVariableDeclaration        :   simpleType ID (EQUAL expression)? PyCOMA                        #ClassVarDecl_AST;
+formalParams
+        locals [int cantParams=0]
+                                :   formalParam (COMA formalParam)*                                 #FormalParams_AST;
+formalParam                     :   type identifier                                                 #FormalParam_AST;
+classVariableDeclaration        :   simpleType identifier (EQUAL expression)? PyCOMA                #ClassVarDecl_AST;
 type                            :   simpleType                                                      #SimpleT_T_AST
                                 |   simpleType PCIZQ PCDER                                          #ArrayT_T_AST
                                 |   ID                                                              #ID_T_AST;
