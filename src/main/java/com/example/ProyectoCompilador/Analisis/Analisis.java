@@ -17,48 +17,47 @@ import java.util.concurrent.ExecutionException;
 public class Analisis {
     
     public String getAnalisisSintactico(String code){
+        /*MiScannerAS inst = null;
+        MiParserAS parser = null;
+        ParseTree tree = null;
 
-        /**MiScannerAS inst = null;
-         MiParserAS parser = null;
-         ParseTree tree = null;
+        CharStream input = null;
+        CommonTokenStream tokens = null;
+        MyErrorListener errorListener = null;
+        try {
+            input = CharStreams.fromFileName("test.txt");
+            inst = new MiScannerAS(input);
+            tokens = new CommonTokenStream(inst);
+            parser = new MiParserAS(tokens);
 
-         CharStream input = null;
-         CommonTokenStream tokens = null;
-         MyErrorListener errorListener = null;
-         try {
-         input = CharStreams.fromFileName("test.txt");
-         inst = new MiScannerAS(input);
-         tokens = new CommonTokenStream(inst);
-         parser = new MiParserAS(tokens);
+            errorListener = new MyErrorListener();
 
-         errorListener = new MyErrorListener();
+            inst.removeErrorListeners();
+            inst.addErrorListener(errorListener);
 
-         inst.removeErrorListeners();
-         inst.addErrorListener(errorListener);
-
-         parser.removeErrorListeners();
-         parser.addErrorListener(errorListener);
-
-         try {
-         tree = parser.program();
-         ContextualAnalysis ac = new ContextualAnalysis();
-         ac.table.openScope();
-         ac.visit(tree);
-         } catch (RecognitionException e) {
-         System.out.println("Error!!!");
-         e.printStackTrace();
-         }
-         if (!errorListener.hasErrors()) {
-         System.out.println("Compilación Exitosa!!\n");
-         java.util.concurrent.Future<JFrame> treeGUI = org.antlr.v4.gui.Trees.inspect(tree, parser);
-         treeGUI.get().setVisible(true);
-         } else {
-         System.out.println("Compilación Fallida!!\n");
-         System.out.println(errorListener.toString());
-         }
-         } catch (InterruptedException | ExecutionException | IOException e) {
-         e.printStackTrace();
-         }**/
+            parser.removeErrorListeners();
+            parser.addErrorListener(errorListener);
+            try {
+                tree = parser.program();
+                ContextualAnalysis ac = new ContextualAnalysis();
+                ac.table.openScope();
+                ac.visit(tree);
+            } catch (RecognitionException e) {
+                System.out.println("Error!!!");
+                e.printStackTrace();
+            }
+            if (!errorListener.hasErrors()) {
+                System.out.println("Compilación Exitosa!!\n");
+                java.util.concurrent.Future<JFrame> treeGUI = org.antlr.v4.gui.Trees.inspect(tree, parser);
+                treeGUI.get().setVisible(true);
+            } else {
+                //falta separarlos
+                System.out.println("Compilación Fallida!!\n");
+                System.out.println(errorListener.toString());
+            }
+        } catch (InterruptedException | ExecutionException | IOException e) {
+            e.printStackTrace();
+        }*/
         return code;
     }
 }
