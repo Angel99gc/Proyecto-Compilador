@@ -1,4 +1,4 @@
-// Generated from C:/Users/josfe/Desktop/Proyecto-Compilador\MiScannerAS.g4 by ANTLR 4.9.1
+// Generated from D:/Desktop/COMPILADORES/Proyecto-Compilador\MiScannerAS.g4 by ANTLR 4.9.1
 package Generated;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
