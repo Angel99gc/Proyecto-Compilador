@@ -83,9 +83,13 @@ arrayAllocationExpression       :   NEW simpleType PCIZQ expression PCDER       
 
 subExpression                   :   PIZQ expression PDER                                        #SubExpress_AST;
 
-functionCall                    :   identifier PIZQ (actualParams)? PDER                        #FunctionCall_AST;
+functionCall
+                locals [ParserRuleContext decl=null]
+                                :   identifier PIZQ (actualParams)? PDER                        #FunctionCall_AST;
 
-actualParams                    :   expression (COMA expression)*                               #ActParams_AST;
+actualParams
+                locals [int cantParams=0]
+                                :   expression (COMA expression)*                               #ActParams_AST;
 
 arrayLookup                     :   identifier PCIZQ expression PCDER                           #ArrayLookup_AST;
 

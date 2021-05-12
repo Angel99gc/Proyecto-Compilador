@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.CommonToken;
 public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     public final SymbolsTable table;
+    private SymbolsTable.Ident idCurrent;
 
     public ContextualAnalysis() {
         this.table = new SymbolsTable();
@@ -68,8 +69,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitReturnStat_State_AST(MiParserAS.ReturnStat_State_ASTContext ctx) {
-        this.visit(ctx.returnStatement());
-        return null;
+        return this.visit(ctx.returnStatement());
     }
 
     @Override
@@ -97,14 +97,21 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         Object attr = this.visit(ctx.type());
         if (attr != null) {
             MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
-            table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
-            table.openScope();
-            if (ctx.formalParams() != null) {
-                this.visit(ctx.formalParams());
+            SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
+            if (id == null) {
+                table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
+                id = table.buscar(idToken.ID().getText());
+                if (ctx.formalParams() != null) {
+                    this.visit(ctx.formalParams());
+                }
+                table.openScope();
+                this.visit(ctx.block());
+                id.declCtx = ctx;
+                table.imprimir();
+                table.closeScope();
+            } else {
+                System.err.println("El método " + idToken.ID().getText() + " ya ha sido declarado!!!");
             }
-            this.visit(ctx.block());
-            table.imprimir();
-            table.closeScope();
         }
         return null;
     }
@@ -124,6 +131,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         if (attr != null) {
             MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
             table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
+            return attr;
         }
         return null;
     }
@@ -147,8 +155,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitReturnStat_AST(MiParserAS.ReturnStat_ASTContext ctx) {
-        this.visit(ctx.expression());
-        return null;
+        return this.visit(ctx.expression());
     }
 
     @Override
@@ -200,22 +207,33 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         Object attr = this.visit(ctx.type());
         if (attr != null) {
             MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
-            table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
-            if (ctx.expression() != null) {
-                SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
-                if (id != null) {
+            SymbolsTable.Ident id = table.buscar(idToken.ID().getText(), (int) attr);
+            if (id == null) {
+                if (ctx.expression() != null) {
                     try {
                         Object exprType = this.visit(ctx.expression());
-                        if (id.type != (int) exprType) {
+                        if ((int) attr != (int) exprType) {
                             System.out.println("Tipos incompatibles para la asignación");
+                        } else {
+                            table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
+                            id = table.buscar(idToken.ID().getText());
+                            if (id != null) {
+                                idToken.decl = id.declCtx;
+                            } else {
+                                System.out.println("\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+                            }
                         }
                     } catch (RuntimeException e) {
                         System.out.println("Error de asignación");
                     }
-                    idToken.decl = id.declCtx;
-                } else
-                    System.out.println("\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+                } else {
+                    table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
+                }
+            } else {
+                System.out.println("La variable " + idToken.ID().getText() + " ya existe!!!");
             }
+        } else {
+            System.out.println("No existe ese tipo");
         }
         return null;
     }
@@ -227,8 +245,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitArrayType_T_AST(MiParserAS.ArrayType_T_ASTContext ctx) {
-        this.visit(ctx.arrayType());
-        return null;
+        return this.visit(ctx.arrayType());
     }
 
     @Override
@@ -258,18 +275,17 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitArrayType_AST(MiParserAS.ArrayType_ASTContext ctx) {
-        this.visit(ctx.simpleType());
-        return null;
+        return this.visit(ctx.simpleType());
     }
 
     @Override
     public Object visitAssignment_AST(MiParserAS.Assignment_ASTContext ctx) {
         MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier(0));
-        SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
+        Object exprType = this.visit(ctx.expression());
+        SymbolsTable.Ident id = table.buscar(idToken.ID().getText(), (int) exprType);
         if (id != null) {
             //FALTA EL OTRO ID
             try {
-                Object exprType = this.visit(ctx.expression());
                 if (id.type != (int) exprType) {
                     System.out.println("Tipos incompatibles para la asignación");
                 }
@@ -292,12 +308,42 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitExpression_AST(MiParserAS.Expression_ASTContext ctx) {
-        int val = (int) this.visit(ctx.simpleExpression(0));
+        //Hay que verificar conforme el operador si la operacion es correcta o no
+        int exprType = -1;
+        int exprType2 = -1;
+        exprType = (int) this.visit(ctx.simpleExpression(0));
         for (int i = 1; i < ctx.simpleExpression().size(); i++) {
-            this.visit(ctx.relationalOp(i - 1));
-            this.visit(ctx.simpleExpression(i));
+            exprType2 = (int) this.visit(ctx.simpleExpression(i));
+            if (exprType != exprType2) {
+                System.out.println("Error tipos incompatibles");
+            } else {
+                switch (exprType) {
+                    case 0:
+                        return 0; //0 representa tipo boolean
+                    case 1:
+                        return 1; //1 representa tipo char
+                    case 2:
+                        switch ((int) this.visit(ctx.relationalOp(i - 1))) {
+                            case 16:
+                            case 17:
+                            case 18:
+                            case 19:
+                            case 20:
+                            case 21:
+                                continue;
+                            default:
+                                System.err.println("Condicional no valida con enteros.");
+                        }
+                        return 2; //2 representa tipo int
+                    case 3:
+                        return 3; //3 representa tipo string
+                    default:
+                        System.out.println(ctx.getText() + " no es un tipo de dato válido!!!");
+                        return null;
+                }
+            }
         }
-        return val;
+        return exprType;
     }
 
     @Override
@@ -327,6 +373,15 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitIdentifier_Fact_AST(MiParserAS.Identifier_Fact_ASTContext ctx) {
+        /*MiParser.IdentASTContext idContext = (MiParser.IdentASTContext) this.visit(ctx.ident());
+        SymbolsTable.Ident id = tabla.buscar(idContext.getText());
+        if (id == null) {
+            System.out.println("\"" + idContext.getText() + "\" no ha sido declarado!!!");
+            throw new RuntimeException();
+        }
+        idContext.decl = id.declCtx;
+        return id.type;*/
+
         this.visit(ctx.identifier(0));
         if (ctx.identifier(1) != null) {
             this.visit(ctx.identifier(1));
@@ -336,8 +391,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitFunctionCall_Fact_AST(MiParserAS.FunctionCall_Fact_ASTContext ctx) {
-        this.visit(ctx.functionCall());
-        return null;
+        return this.visit(ctx.functionCall());
     }
 
     @Override
@@ -372,8 +426,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitUnary_Fact_AST(MiParserAS.Unary_Fact_ASTContext ctx) {
-        this.visit(ctx.unary());
-        return null;
+        return this.visit(ctx.unary());
     }
 
     @Override
@@ -399,25 +452,46 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitSubExpress_AST(MiParserAS.SubExpress_ASTContext ctx) {
-        this.visit(ctx.expression());
-        return null;
+        return this.visit(ctx.expression());
     }
 
     @Override
     public Object visitFunctionCall_AST(MiParserAS.FunctionCall_ASTContext ctx) {
-        this.visit(ctx.identifier());
-        if (ctx.actualParams() != null) {
-            this.visit(ctx.actualParams());
+        this.idCurrent = table.buscar(ctx.identifier().getText());
+        if (this.idCurrent == null) {
+            System.out.println("\"" + ctx.identifier().getText() + "\" no es un método declarado!!!");
+            //throw new RuntimeException();
+            return null;
+        } else {
+
+            this.visit((ctx).actualParams());
+            //verificar que la cantidad de parametro y el tipo de los mismos concuerdan
+
+            ctx.decl = this.idCurrent.declCtx;
+            return this.idCurrent.type;
         }
-        return null;
     }
 
     @Override
     public Object visitActParams_AST(MiParserAS.ActParams_ASTContext ctx) {
-        for (MiParserAS.ExpressionContext c : ctx.expression()) {
-            this.visit(c);
+        MiParserAS.FunctionDecl_ASTContext a = ((MiParserAS.FunctionDecl_ASTContext) this.idCurrent.declCtx);
+        MiParserAS.FormalParams_ASTContext b = (MiParserAS.FormalParams_ASTContext) a.formalParams();
+        ctx.cantParams = ctx.expression().size();
+        if (ctx.cantParams != b.cantParams) {
+            System.out.println("Error, cantidad de parametros diferentes a la declaracion");
+            return null;
+        } else {
+            for (int i = 0; i < ctx.expression().size(); i++) {
+                int val1 = (int) visit(ctx.expression(i));
+                MiParserAS.FormalParam_ASTContext c = (MiParserAS.FormalParam_ASTContext) b.formalParam(i);
+                Object x = c.identifier().getText();
+                SymbolsTable.Ident val2 = table.buscar(c.identifier().getText());
+                if (val1 != val2.type) {
+                    System.out.println("No coiciden!!!!");
+                }
+            }
         }
-        return null;
+        return 0;
     }
 
     @Override
@@ -435,7 +509,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitRelationalOp(MiParserAS.RelationalOpContext ctx) {
-        return null;
+        return ctx.getStart().getType();
     }
 
     @Override

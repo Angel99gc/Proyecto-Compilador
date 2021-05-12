@@ -2141,6 +2141,7 @@ public class MiParserAS extends Parser {
 	}
 
 	public static class FunctionCallContext extends ParserRuleContext {
+		public ParserRuleContext decl = null;
 		public FunctionCallContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2149,6 +2150,7 @@ public class MiParserAS extends Parser {
 		public FunctionCallContext() { }
 		public void copyFrom(FunctionCallContext ctx) {
 			super.copyFrom(ctx);
+			this.decl = ctx.decl;
 		}
 	}
 	public static class FunctionCall_ASTContext extends FunctionCallContext {
@@ -2206,6 +2208,7 @@ public class MiParserAS extends Parser {
 	}
 
 	public static class ActualParamsContext extends ParserRuleContext {
+		public int cantParams = 0;
 		public ActualParamsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2214,6 +2217,7 @@ public class MiParserAS extends Parser {
 		public ActualParamsContext() { }
 		public void copyFrom(ActualParamsContext ctx) {
 			super.copyFrom(ctx);
+			this.cantParams = ctx.cantParams;
 		}
 	}
 	public static class ActParams_ASTContext extends ActualParamsContext {

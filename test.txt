@@ -1,26 +1,10 @@
-int MAX;
-MAX = 10;
-int Pa;
-char Ca;
-boolean Ta = false;
-string P;
-P = "Fer";
 
-int ComputeFac(int num) {
+boolean d;
+char x = 'A';
 
+int [] f(boolean o, int g, boolean z)
+{
+    d = true;
 }
 
-int imprimir(){
-
-}
-
-class hola{
-	boolean b = true;
-    int x;
-    int a;
-};
-
-
-int operaciones(int op1, int op2){
-
-}
+d = f(true,10,false);
