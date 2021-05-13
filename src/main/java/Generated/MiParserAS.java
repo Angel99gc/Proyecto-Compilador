@@ -26,29 +26,29 @@ public class MiParserAS extends Parser {
 		INT=49, STRING=50, NEW=51, LENGTH=52, TRUE=53, FALSE=54, ID=55, NUM=56, 
 		CHARS=57;
 	public static final int
-		RULE_program = 0, RULE_statement = 1, RULE_block = 2, RULE_functionDeclaration = 3, 
-		RULE_formalParams = 4, RULE_formalParam = 5, RULE_whileStatement = 6, 
-		RULE_ifStatement = 7, RULE_returnStatement = 8, RULE_printStatement = 9, 
-		RULE_classDeclaration = 10, RULE_classVariableDeclaration = 11, RULE_variableDeclaration = 12, 
-		RULE_type = 13, RULE_simpleType = 14, RULE_arrayType = 15, RULE_assignment = 16, 
-		RULE_arrayAssignment = 17, RULE_expression = 18, RULE_simpleExpression = 19, 
-		RULE_term = 20, RULE_factor = 21, RULE_unary = 22, RULE_allocationExpression = 23, 
-		RULE_arrayAllocationExpression = 24, RULE_subExpression = 25, RULE_functionCall = 26, 
-		RULE_actualParams = 27, RULE_arrayLookup = 28, RULE_arrayLength = 29, 
-		RULE_relationalOp = 30, RULE_additiveOp = 31, RULE_multiplicativeOp = 32, 
-		RULE_identifier = 33, RULE_literal = 34, RULE_intLiteral = 35, RULE_realLiteral = 36, 
-		RULE_charLiteral = 37, RULE_boolLiteral = 38, RULE_stringLiteral = 39, 
+		RULE_program = 0, RULE_statement = 1, RULE_block = 2, RULE_functionDeclaration = 3,
+		RULE_formalParams = 4, RULE_formalParam = 5, RULE_whileStatement = 6,
+		RULE_ifStatement = 7, RULE_returnStatement = 8, RULE_printStatement = 9,
+		RULE_classDeclaration = 10, RULE_classVariableDeclaration = 11, RULE_variableDeclaration = 12,
+		RULE_type = 13, RULE_simpleType = 14, RULE_arrayType = 15, RULE_assignment = 16,
+		RULE_arrayAssignment = 17, RULE_expression = 18, RULE_simpleExpression = 19,
+		RULE_term = 20, RULE_factor = 21, RULE_unary = 22, RULE_allocationExpression = 23,
+		RULE_arrayAllocationExpression = 24, RULE_subExpression = 25, RULE_functionCall = 26,
+		RULE_actualParams = 27, RULE_arrayLookup = 28, RULE_arrayLength = 29,
+		RULE_relationalOp = 30, RULE_additiveOp = 31, RULE_multiplicativeOp = 32,
+		RULE_identifier = 33, RULE_literal = 34, RULE_intLiteral = 35, RULE_realLiteral = 36,
+		RULE_charLiteral = 37, RULE_boolLiteral = 38, RULE_stringLiteral = 39,
 		RULE_printable = 40;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"program", "statement", "block", "functionDeclaration", "formalParams", 
-			"formalParam", "whileStatement", "ifStatement", "returnStatement", "printStatement", 
-			"classDeclaration", "classVariableDeclaration", "variableDeclaration", 
-			"type", "simpleType", "arrayType", "assignment", "arrayAssignment", "expression", 
-			"simpleExpression", "term", "factor", "unary", "allocationExpression", 
-			"arrayAllocationExpression", "subExpression", "functionCall", "actualParams", 
-			"arrayLookup", "arrayLength", "relationalOp", "additiveOp", "multiplicativeOp", 
-			"identifier", "literal", "intLiteral", "realLiteral", "charLiteral", 
+			"program", "statement", "block", "functionDeclaration", "formalParams",
+			"formalParam", "whileStatement", "ifStatement", "returnStatement", "printStatement",
+			"classDeclaration", "classVariableDeclaration", "variableDeclaration",
+			"type", "simpleType", "arrayType", "assignment", "arrayAssignment", "expression",
+			"simpleExpression", "term", "factor", "unary", "allocationExpression",
+			"arrayAllocationExpression", "subExpression", "functionCall", "actualParams",
+			"arrayLookup", "arrayLength", "relationalOp", "additiveOp", "multiplicativeOp",
+			"identifier", "literal", "intLiteral", "realLiteral", "charLiteral",
 			"boolLiteral", "stringLiteral", "printable"
 		};
 	}
@@ -701,7 +701,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_whileStatement; }
-	 
+
 		public WhileStatementContext() { }
 		public void copyFrom(WhileStatementContext ctx) {
 			super.copyFrom(ctx);
@@ -760,7 +760,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_ifStatement; }
-	 
+
 		public IfStatementContext() { }
 		public void copyFrom(IfStatementContext ctx) {
 			super.copyFrom(ctx);
@@ -836,7 +836,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_returnStatement; }
-	 
+
 		public ReturnStatementContext() { }
 		public void copyFrom(ReturnStatementContext ctx) {
 			super.copyFrom(ctx);
@@ -884,7 +884,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_printStatement; }
-	 
+
 		public PrintStatementContext() { }
 		public void copyFrom(PrintStatementContext ctx) {
 			super.copyFrom(ctx);
@@ -933,7 +933,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classDeclaration; }
-	 
+
 		public ClassDeclarationContext() { }
 		public void copyFrom(ClassDeclarationContext ctx) {
 			super.copyFrom(ctx);
@@ -1079,7 +1079,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableDeclaration; }
-	 
+
 		public VariableDeclarationContext() { }
 		public void copyFrom(VariableDeclarationContext ctx) {
 			super.copyFrom(ctx);
@@ -1281,7 +1281,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arrayType; }
-	 
+
 		public ArrayTypeContext() { }
 		public void copyFrom(ArrayTypeContext ctx) {
 			super.copyFrom(ctx);
@@ -1332,7 +1332,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_assignment; }
-	 
+
 		public AssignmentContext() { }
 		public void copyFrom(AssignmentContext ctx) {
 			super.copyFrom(ctx);
@@ -1402,7 +1402,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arrayAssignment; }
-	 
+
 		public ArrayAssignmentContext() { }
 		public void copyFrom(ArrayAssignmentContext ctx) {
 			super.copyFrom(ctx);
@@ -1904,7 +1904,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_unary; }
-	 
+
 		public UnaryContext() { }
 		public void copyFrom(UnaryContext ctx) {
 			super.copyFrom(ctx);
@@ -1957,7 +1957,7 @@ public class MiParserAS extends Parser {
 					setState(258);
 					expression();
 					}
-					} 
+					}
 				}
 				setState(263);
 				_errHandler.sync(this);
@@ -1981,7 +1981,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_allocationExpression; }
-	 
+
 		public AllocationExpressionContext() { }
 		public void copyFrom(AllocationExpressionContext ctx) {
 			super.copyFrom(ctx);
@@ -2035,7 +2035,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arrayAllocationExpression; }
-	 
+
 		public ArrayAllocationExpressionContext() { }
 		public void copyFrom(ArrayAllocationExpressionContext ctx) {
 			super.copyFrom(ctx);
@@ -2094,7 +2094,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_subExpression; }
-	 
+
 		public SubExpressionContext() { }
 		public void copyFrom(SubExpressionContext ctx) {
 			super.copyFrom(ctx);
@@ -2146,7 +2146,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionCall; }
-	 
+
 		public FunctionCallContext() { }
 		public void copyFrom(FunctionCallContext ctx) {
 			super.copyFrom(ctx);
@@ -2283,7 +2283,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arrayLookup; }
-	 
+
 		public ArrayLookupContext() { }
 		public void copyFrom(ArrayLookupContext ctx) {
 			super.copyFrom(ctx);
@@ -2339,7 +2339,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arrayLength; }
-	 
+
 		public ArrayLengthContext() { }
 		public void copyFrom(ArrayLengthContext ctx) {
 			super.copyFrom(ctx);
@@ -2700,7 +2700,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_intLiteral; }
-	 
+
 		public IntLiteralContext() { }
 		public void copyFrom(IntLiteralContext ctx) {
 			super.copyFrom(ctx);
@@ -2803,7 +2803,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_charLiteral; }
-	 
+
 		public CharLiteralContext() { }
 		public void copyFrom(CharLiteralContext ctx) {
 			super.copyFrom(ctx);
@@ -2890,7 +2890,7 @@ public class MiParserAS extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stringLiteral; }
-	 
+
 		public StringLiteralContext() { }
 		public void copyFrom(StringLiteralContext ctx) {
 			super.copyFrom(ctx);
@@ -2935,7 +2935,7 @@ public class MiParserAS extends Parser {
 					setState(331);
 					printable();
 					}
-					} 
+					}
 				}
 				setState(336);
 				_errHandler.sync(this);

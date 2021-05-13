@@ -23,9 +23,6 @@ public class Controlador{
 
     @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
     public Map<String, String> postAnalisis(@RequestBody() String code){
-        Map<String, String> map = new HashMap<>();
-        map.put("data", this.analisis.getAnalisisSintactico(code));
-        map.put("code", "200");
-        return map;
+        return this.analisis.getAnalisisSintactico(code);
     }
 }

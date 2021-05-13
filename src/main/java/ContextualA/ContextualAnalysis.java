@@ -4,10 +4,14 @@ import Generated.MiParserAS;
 import Generated.MiParserASBaseVisitor;
 import org.antlr.v4.runtime.CommonToken;
 
+import java.util.ArrayList;
+
 public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     public final SymbolsTable table;
     private SymbolsTable.Ident idCurrent;
+    public ArrayList<String> errorMsgs = new ArrayList<String>();
+
 
     public ContextualAnalysis() {
         this.table = new SymbolsTable();
