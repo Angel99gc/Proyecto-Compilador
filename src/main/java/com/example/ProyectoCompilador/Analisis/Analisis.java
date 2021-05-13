@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import javax.swing.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -53,19 +54,19 @@ public class Analisis {
                     ac.table.openScope();
                     ac.visit(tree);
                     if (ac.errorMsgs.size() > 0){
-                        json.put("data", "Compilacion Fallida:  Error(es) Contextual(es):\n" + ac.errorMsgs.toString());
+                        json.put("error", "Compilacion Fallida:  Error(es) Contextual(es):\n" + ListToString(ac.errorMsgs));
                         json.put("code", "400");
                     }else{
                         json.put("data", "Compilacion Exitosa!!");
                         json.put("code", "200");
+                        System.out.println("Compilación Exitosa!!\n");
+
                     }
                 } catch (RecognitionException e) {
 
                     System.err.println("Error!!!");
                     e.printStackTrace();
                 }
-                json.put("data", "Compilacion Exitosa!!");
-                json.put("code", "200");
                 System.out.println("Compilación Exitosa!!\n");
                 //  java.util.concurrent.Future<JFrame> treeGUI = org.antlr.v4.gui.Trees.inspect(tree, parser);
                 //  treeGUI.get().setVisible(true);
@@ -81,5 +82,14 @@ public class Analisis {
             json.put("code", "500");
         }*/
         return json;
+    }
+
+    public String ListToString(ArrayList<String> errores){
+        StringBuilder builder = new StringBuilder();
+        for (String s : errores) {
+            builder.append(String.format("%s\n", s));
+        }
+        return builder.toString();
+
     }
 }
