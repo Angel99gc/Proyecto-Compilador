@@ -59,6 +59,7 @@ NEW     :   'new';
 LENGTH  :   'length';
 TRUE    :   'true';
 FALSE   :   'false';
+VOID    :   'void';
 
 ID : (UNDSCR | LETTER) (UNDSCR | LETTER | DIGIT)* ;
 NUM : DIGIT DIGIT* ;

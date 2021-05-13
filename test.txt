@@ -1,57 +1,8 @@
-boolean d;
-char x = 'A';
 
-int [] f(boolean o, int g, boolean z)
+int[] f(boolean o, int g, boolean z)
 {
-    boolean b;
-    int x;
+    int x = 10;
     int [] a;
-    {
-      d = false;
-      x = 9;
-    }
-}
 
-int metodo()
-{
-    int x;
-    {
-      boolean y = true;
-    }
-}
-
-int metodo()
-{
-    return 2;
-}
-
-class hola{
-    int x;
-    char y;
-    string tira;
-};
-
-boolean k()
-{
-    boolean b;
-    boolean r;
-    int x;
-    hola j;
-    int [] a;
-    {
-      x = 5;
-      r = false;
-      d = true;
-
-      if ((x < 1) || (x == 1))
-      { }
-      else
-      { }
-    }
-
-    a = f(true,10,x,2);
-    a = f(true,10,r);
-
-    operacion = 15;
 
 }

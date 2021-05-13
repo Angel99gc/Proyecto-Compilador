@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 public class ProyectoCompiladorApplication {
 
     public static void main(String[] args) {
-        /** MiScannerAS inst = null;
+        MiScannerAS inst = null;
         MiParserAS parser = null;
         ParseTree tree = null;
 
@@ -61,8 +61,8 @@ public class ProyectoCompiladorApplication {
             }
         } catch (InterruptedException | ExecutionException | IOException e) {
             e.printStackTrace();
-        }**/
-        SpringApplication.run(ProyectoCompiladorApplication.class, args);
+        }
+        //SpringApplication.run(ProyectoCompiladorApplication.class, args);
     }
 
 }

@@ -21,7 +21,7 @@ block                           :   CIZQ (statement)* CDER                      
 
 functionDeclaration
                 locals [ParserRuleContext decl=null]
-                                :   type identifier PIZQ (formalParams)? PDER block             #FunctionDecl_AST;
+                                :   (VOID | type) identifier PIZQ (formalParams)? PDER block    #FunctionDecl_AST;
 
 formalParams    locals [int cantParams=0]
                                 :   formalParam (COMA formalParam)*                             #FormalParams_AST;

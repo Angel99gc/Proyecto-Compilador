@@ -12,7 +12,7 @@ public class SymbolsTable {
 
     public class Ident {
         Token tok;
-        int type; //esto probablemente cambie a un tipo más estructurado
+        int type;
         int nivel;
         int valor;
         ParserRuleContext declCtx;
