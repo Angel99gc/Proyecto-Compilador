@@ -53,7 +53,7 @@ public class Analisis {
                     ac.table.openScope();
                     ac.visit(tree);
                     if (ac.errorMsgs.size() > 0){
-                        json.put("data", "Compilacion Fallida: \n Error(es) Contextual(es): " + ac.errorMsgs.toString());
+                        json.put("data", "Compilacion Fallida:  Error(es) Contextual(es):\n" + ac.errorMsgs.toString());
                         json.put("code", "400");
                     }else{
                         json.put("data", "Compilacion Exitosa!!");
@@ -70,7 +70,7 @@ public class Analisis {
                 //  java.util.concurrent.Future<JFrame> treeGUI = org.antlr.v4.gui.Trees.inspect(tree, parser);
                 //  treeGUI.get().setVisible(true);
             } else {
-                json.put("error", "Compilacion Fallida: \n" + errorListener.toString());
+                json.put("error", "Compilacion Fallida:  Error(es) Sintactico(s):\n" + errorListener.toString());
                 json.put("code", "400");
                 System.out.println("Compilación Fallida!!\n");
                 System.out.println(errorListener.toString());
