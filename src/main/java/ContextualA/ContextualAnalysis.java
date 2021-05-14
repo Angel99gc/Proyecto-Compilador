@@ -49,8 +49,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitArrayAssign_State_AST(MiParserAS.ArrayAssign_State_ASTContext ctx) {
-        this.visit(ctx.arrayAssignment());
-        return null;
+        return this.visit(ctx.arrayAssignment());
     }
 
     @Override
@@ -252,7 +251,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         Object attr = this.visit(ctx.type());
         if (attr != null) {
             MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
-            SymbolsTable.Ident id = table.buscar(idToken.ID().getText(), (int) attr);
+            SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
             if (id == null) {
                 if (ctx.expression() != null) {
                     try {
@@ -339,7 +338,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
     public Object visitAssignment_AST(MiParserAS.Assignment_ASTContext ctx) {
         MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier(0));
         Object exprType = this.visit(ctx.expression());
-        SymbolsTable.Ident id = table.buscar(idToken.ID().getText(), (int) exprType);
+        SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
         if (id != null) {
             //FALTA EL OTRO ID
             try {
@@ -361,9 +360,22 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitArrayAssign_AST(MiParserAS.ArrayAssign_ASTContext ctx) {
-        this.visit(ctx.identifier());
-        this.visit(ctx.expression(0));
-        this.visit(ctx.expression(1));
+        MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
+        SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
+        if (id != null) {
+            int exprType = (int) this.visit(ctx.expression(0));
+            if (exprType != 2) {
+                System.out.println("Para acceder al arreglo, solo se puede con tipos 'int', no " + this.tipoDato(exprType));
+            }
+            int exprType2 = (int) this.visit(ctx.expression(1));
+            if (exprType != exprType2) {
+                this.errorMsgs.add("Error de tipos incompatibles");
+                System.err.println("Error tipos incompatibles");
+            }
+        } else {
+            this.errorMsgs.add("\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+            System.err.println("\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+        }
         return null;
     }
 
@@ -567,8 +579,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitArrayAllocExpress_Fact_AST(MiParserAS.ArrayAllocExpress_Fact_ASTContext ctx) {
-        this.visit(ctx.arrayAllocationExpression());
-        return null;
+        return this.visit(ctx.arrayAllocationExpression());
     }
 
     @Override
@@ -610,20 +621,22 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitAllocExpress_AST(MiParserAS.AllocExpress_ASTContext ctx) {
-        this.visit(ctx.identifier());
-        return null;
+        MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
+        SymbolsTable.Ident id = table.buscar(ctx.identifier().getText());
+        if (id == null) {
+            System.err.println("La clase '" + ctx.identifier().getText() + "' no ha sido creada.");
+            return -1;
+        }
+        return id.type;
     }
 
     @Override
     public Object visitArrayAllocExpress_AST(MiParserAS.ArrayAllocExpress_ASTContext ctx) {
-
         int exprType = (int) this.visit(ctx.simpleType());
         int exprType2 = (int) this.visit(ctx.expression());
-
-        if (exprType != exprType2) {
-            this.errorMsgs.add("Tipos incompatibles para el tamaño del arreglo, " + this.tipoDato(exprType) + " con " + this.tipoDato(exprType2));
-            System.err.println("Tipos incompatibles para el tamaño del arreglo. " + this.tipoDato(exprType) + " con " + this.tipoDato(exprType2));
-            return -1;
+        if (exprType2 != 2) {
+            this.errorMsgs.add("Para indicar el tamaño del arreglo, solo se permite con 'int' no " + this.tipoDato(exprType2) + ".");
+            System.err.println("Para indicar el tamaño del arreglo, solo se permite con 'int' no " + this.tipoDato(exprType2) + ".");
         }
         return exprType;
     }

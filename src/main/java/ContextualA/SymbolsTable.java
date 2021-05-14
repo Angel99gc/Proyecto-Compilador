@@ -47,18 +47,18 @@ public class SymbolsTable {
 
     public Ident buscar(String nombre) {
         Ident temp = null;
-        for (Object id : tabla)
-            if (((Ident) id).tok.getText().equals(nombre))
-                return ((Ident) id);
-        return temp;
-    }
-
-    public Ident buscar(String nombre, int tipo) {
-        Ident temp = null;
-        for (Object id : tabla)
-            if (((Ident) id).tok.getText().equals(nombre))
-                if (((Ident) id).type == tipo)
+        for (Object id : tabla) {
+            if (((Ident) id).tok.getText().equals(nombre)) {
+                if (((Ident) id).nivel == nivelActual) {
                     return ((Ident) id);
+                }
+            }
+        }
+        for (Object id : tabla) {
+            if (((Ident) id).tok.getText().equals(nombre)) {
+                return ((Ident) id);
+            }
+        }
         return temp;
     }
 

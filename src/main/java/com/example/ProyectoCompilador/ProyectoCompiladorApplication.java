@@ -44,6 +44,7 @@ public class ProyectoCompiladorApplication {
             try {
                 tree = parser.program();
                 ContextualAnalysis ac = new ContextualAnalysis();
+
                 ac.visit(tree);
                 ac.table.imprimir();
             } catch (RecognitionException e) {

@@ -1,8 +1,10 @@
+class hola{
+    int x;
+    char y;
+    string tira;
+};
 
-int[] f(boolean o, int g, boolean z)
+void k()
 {
-    int x = 10;
-    int [] a;
-
-
+    hola j;
 }
