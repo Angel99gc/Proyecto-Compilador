@@ -12,7 +12,6 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
     private SymbolsTable.Ident idCurrent;
     public ArrayList<String> errorMsgs = new ArrayList<String>();
 
-
     public ContextualAnalysis() {
         this.table = new SymbolsTable();
         this.table.insertar(new CommonToken(MiParserAS.ID, "print"), -1, null);
@@ -66,8 +65,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitWhileStat_State_AST(MiParserAS.WhileStat_State_ASTContext ctx) {
-        this.visit(ctx.whileStatement());
-        return null;
+        return this.visit(ctx.whileStatement());
     }
 
     @Override
@@ -116,14 +114,12 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                 int valor = (int) this.visit(ctx.block());
                 if (valor >= 10) {
                     this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Porque la función no debe retorna algo.");
-                    System.err.println("Error: line " + ctx.start.getLine() + ". Porque la función no debe retorna algo.");
                 }
                 id.declCtx = ctx;
                 table.imprimir();
                 table.closeScope();
             } else {
                 this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". El método " + idToken.ID().getText() + " ya ha sido declarado!!!");
-                System.err.println("Error: line " + ctx.start.getLine() + ". El método " + idToken.ID().getText() + " ya ha sido declarado!!!");
             }
         } else {
             Object attr = this.visit(ctx.type());
@@ -141,19 +137,16 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                     if (valor >= 10) {
                         if ((valor - 10) != (int) attr) {
                             this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". El tipo de retorno " + this.tipoDato((int) attr) + " no coincide con el del método!!!!");
-                            System.err.println("Error: line " + ctx.start.getLine() + ". El tipo de retorno " + this.tipoDato((int) attr) + " no coincide con el del método!!!!");
                         }
                     } else {
                         this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Porque la función debe retorna algo.");
-                        System.err.println("Error: line " + ctx.start.getLine() + ". Porque la función debe retorna algo.");
                     }
 
                     id.declCtx = ctx;
                     table.imprimir();
                     table.closeScope();
                 } else {
-                    this.errorMsgs.add("Error: line "+ ctx.start.getLine() +".El método " + idToken.ID().getText() + " ya ha sido declarado!!!");
-                    System.err.println("Error: line "+ ctx.start.getLine() +".El método " + idToken.ID().getText() + " ya ha sido declarado!!!");
+                    this.errorMsgs.add("Error: line " + ctx.start.getLine() + ".El método " + idToken.ID().getText() + " ya ha sido declarado!!!");
                 }
             }
         }
@@ -233,17 +226,14 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                     try {
                         Object exprType = this.visit(ctx.expression());
                         if (id.type != (int) exprType) {
-                            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles para la asignación entre " + this.tipoDato(id.type)+ " - "+this.tipoDato((int) exprType));
-                            System.err.println("Error: line " + ctx.start.getLine() + ". Tipos incompatibles para la asignación entre " + this.tipoDato(id.type)+ " - "+this.tipoDato((int) exprType));
+                            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles para la asignación entre " + this.tipoDato(id.type) + " - " + this.tipoDato((int) exprType));
                         }
                     } catch (RuntimeException e) {
                         this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Error al asignar");
-                        System.err.println("Error: line " + ctx.start.getLine() + ". Error al asignar");
                     }
                     idToken.decl = id.declCtx;
                 } else {
-                    this.errorMsgs.add("Error: line " +ctx.start.getLine()+ "\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
-                    System.err.println("Error: line " +ctx.start.getLine()+ "\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+                    this.errorMsgs.add("Error: line " + ctx.start.getLine() + "\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
                 }
             }
         }
@@ -255,38 +245,33 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         Object attr = this.visit(ctx.type());
         if (attr != null) {
             MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
-            SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
+            SymbolsTable.Ident id = table.buscar(idToken.ID().getText(), (int) attr);
             if (id == null) {
                 if (ctx.expression() != null) {
                     try {
                         Object exprType = this.visit(ctx.expression());
                         if ((int) attr != (int) exprType) {
-                            this.errorMsgs.add("Error: line "+ctx.start.getLine()+". Tipos incompatibles para la asignación. " + this.tipoDato((int) attr) + " a " + this.tipoDato((int) exprType));
-                            System.err.println("Error: line "+ctx.start.getLine()+". Tipos incompatibles para la asignación. " + this.tipoDato((int) attr) + " a " + this.tipoDato((int) exprType));
+                            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles para la asignación. " + this.tipoDato((int) attr) + " a " + this.tipoDato((int) exprType));
                         } else {
                             table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
                             id = table.buscar(idToken.ID().getText());
                             if (id != null) {
                                 idToken.decl = id.declCtx;
                             } else {
-                                this.errorMsgs.add("Error: line "+ctx.start.getLine()+".\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
-                                System.err.println("Error: line "+ctx.start.getLine()+".\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+                                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ".\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
                             }
                         }
                     } catch (RuntimeException e) {
                         this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Error al asignar");
-                        System.err.println("Error: line " + ctx.start.getLine() + ". Error al asignar");
                     }
                 } else {
                     table.insertar(idToken.ID().getSymbol(), (int) attr, ctx);
                 }
             } else {
-                this.errorMsgs.add("Error: line "+ctx.start.getLine()+". La variable " + idToken.ID().getText() + " ya existe!!!");
-                System.err.println("Error: line "+ctx.start.getLine()+". La variable " + idToken.ID().getText() + " ya existe!!!");
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". La variable " + idToken.ID().getText() + " ya existe!!!");
             }
         } else {
-            this.errorMsgs.add("Error: line " +ctx.start.getLine()+ ". El tipo '"+ctx.type().getText()+"' no existe");
-            System.err.println("Error: line " +ctx.start.getLine()+ ". El tipo '"+ctx.type().getText()+"' no existe");
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". El tipo '" + ctx.type().getText() + "' no existe");
         }
         return null;
     }
@@ -308,16 +293,13 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         if (id != null) {
             return id.type;
         } else {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+" .\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
-            System.err.println("Error: line "+ctx.start.getLine()+" .\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
-            return null;
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + " .\"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+            return -1;
         }
     }
 
     @Override
     public Object visitSimpleType(MiParserAS.SimpleTypeContext ctx) {
-        //debería verificar el tipo de dato que sea correcto y
-        //retornar el entero equivalente a ese tipo de dato
         switch (ctx.getText()) {
             case "boolean":
                 return 0; //0 representa tipo boolean
@@ -328,9 +310,8 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
             case "string":
                 return 3; //3 representa tipo string
             default:
-                this.errorMsgs.add("Error: line "+ctx.start.getLine()+". "+ctx.getText() + " no es un tipo de dato válido!!!");
-                System.err.println("Error: line "+ctx.start.getLine()+". "+ctx.getText() + " no es un tipo de dato válido!!!");
-                return null;
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". " + ctx.getText() + " no es un tipo de dato válido!!!");
+                return -1;
         }
     }
 
@@ -343,22 +324,18 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
     public Object visitAssignment_AST(MiParserAS.Assignment_ASTContext ctx) {
         MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier(0));
         Object exprType = this.visit(ctx.expression());
-        SymbolsTable.Ident id = table.buscar(idToken.ID().getText());
+        SymbolsTable.Ident id = table.buscar(idToken.ID().getText(), (int) exprType);
         if (id != null) {
-            //FALTA EL OTRO ID
             try {
                 if (id.type != (int) exprType) {
-                    this.errorMsgs.add("Error: line "+ctx.start.getLine() + ". Tipos incompatibles de "+this.tipoDato(id.type)+" - "+ tipoDato((int)exprType)+".");
-                    System.err.println("Error: line "+ctx.start.getLine() + ". Tipos incompatibles de "+this.tipoDato(id.type)+" - '"+ tipoDato((int) exprType)+".");
+                    this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles de " + this.tipoDato(id.type) + " - " + tipoDato((int) exprType) + ".");
                 }
             } catch (RuntimeException e) {
-                this.errorMsgs.add("Error: line "+ctx.start.getLine()+" al asignar");
-                System.err.println("Error: line "+ctx.start.getLine()+" al asignar");
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + " al asignar");
             }
             idToken.decl = id.declCtx;
         } else {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+" \"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
-            System.err.println("Error: line "+ctx.start.getLine()+" \"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + " \"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
         }
         return null;
     }
@@ -370,19 +347,16 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         if (id != null) {
             int exprType = (int) this.visit(ctx.expression(0));
             if (exprType != 2) {
-                this.errorMsgs.add("Para acceder al arreglo, solo se puede con tipos 'int', no " + this.tipoDato(exprType));
-                System.out.println("Para acceder al arreglo, solo se puede con tipos 'int', no " + this.tipoDato(exprType));
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ", para acceder al arreglo, solo se puede con tipos 'int', no " + this.tipoDato(exprType));
             }
             int exprType2 = (int) this.visit(ctx.expression(1));
             if (exprType != exprType2) {
-                this.errorMsgs.add("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
-                System.err.println("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2));
             }
         } else {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+" \"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
-            System.err.println("Error: line "+ctx.start.getLine()+" \"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + " \"" + idToken.ID().getText() + "\" no ha sido declarado!!!");
         }
-        return null;
+        return -1;
     }
 
     @Override
@@ -393,8 +367,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         for (int i = 1; i < ctx.simpleExpression().size(); i++) {
             exprType2 = (int) this.visit(ctx.simpleExpression(i));
             if (exprType != exprType2) {
-                this.errorMsgs.add("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
-                System.err.println("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2));
             } else {
                 switch (exprType) {
                     case 0:
@@ -406,8 +379,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                                 exprType = 0;
                                 continue;
                             default:
-                                this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.relationalOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                                System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.relationalOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                                this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.relationalOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                                 exprType = -1;
                         }
                     case 2:
@@ -421,13 +393,11 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                                 exprType = 0;
                                 continue;
                             default:
-                                this.errorMsgs.add("Error: line "+ctx.start.getLine()+". La condicional " + ctx.relationalOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                                System.err.println("Error: line "+ctx.start.getLine()+". La condicional " + ctx.relationalOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". La condicional " + ctx.relationalOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                                 exprType = -1;
                         }
                     default:
-                        this.errorMsgs.add("Error: line"+ ctx.start.getLine()+ ". "+ctx.getText() + " no es un tipo de dato válido!!!");
-                        System.err.println("Error: line"+ ctx.start.getLine()+ ". "+ctx.getText() + " no es un tipo de dato válido!!!");
+                        this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". " + ctx.getText() + " no es un tipo de dato válido!!!");
                         exprType = -1;
                 }
             }
@@ -435,6 +405,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         return exprType;
     }
 
+    @Override
     public Object visitSimpleExpre_AST(MiParserAS.SimpleExpre_ASTContext ctx) {
         int exprType = -1;
         int exprType2 = -1;
@@ -442,21 +413,18 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         for (int i = 1; i < ctx.term().size(); i++) {
             exprType2 = (int) this.visit(ctx.term(i));
             if (exprType != exprType2) {
-                this.errorMsgs.add("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
-                System.err.println("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2));
             } else {
                 switch (exprType) {
                     case 0:
                         if ((int) this.visit(ctx.additiveOp(i - 1)) == MiParserAS.OR) { // or  **Si pero es redundante
                             continue;
                         } else {
-                            this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                            System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                            this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                             exprType = -1;
                         }
                     case 1:
-                        this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                        System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                        this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                         exprType = -1;
                     case 2:
                         switch ((int) this.visit(ctx.additiveOp(i - 1))) {
@@ -465,8 +433,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                                 exprType = 2;
                                 continue;
                             default:
-                                this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                                System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                                this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                                 exprType = -1;
                         }
                     case 3:
@@ -474,20 +441,17 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                             exprType = 3;
                             continue;
                         } else {
-                            this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                            System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                            this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.additiveOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                             exprType = -1;
                         }
                     default:
-                        this.errorMsgs.add("Error: line"+ ctx.start.getLine()+ ". "+ctx.getText() + " no es un tipo de dato válido!!!");
-                        System.err.println("Error: line"+ ctx.start.getLine()+ ". "+ctx.getText() + " no es un tipo de dato válido!!!");
+                        this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". " + ctx.getText() + " no es un tipo de dato válido!!!");
                         exprType = -1;
                 }
             }
         }
         return exprType;
     }
-
 
     @Override
     public Object visitTerm_AST(MiParserAS.Term_ASTContext ctx) {
@@ -497,21 +461,18 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         for (int i = 1; i < ctx.factor().size(); i++) {
             exprType2 = (int) this.visit(ctx.factor(i));
             if (exprType != exprType2) {
-                this.errorMsgs.add("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
-                System.err.println("Error: line "+ctx.start.getLine()+". Tipos incompatibles "+this.tipoDato(exprType) +" - "+ this.tipoDato(exprType2));
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Tipos incompatibles " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2));
             } else {
                 switch (exprType) {
                     case 0:
                         if ((int) this.visit(ctx.multiplicativeOp(i - 1)) == MiParserAS.AND) { // &&  ****Si pero es redundante
                             continue;
                         } else {
-                            this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                            System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                            this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                             exprType = -1;
                         }
                     case 1:
-                        this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                        System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                        this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                         exprType = -1;
                     case 2:
                         switch ((int) this.visit(ctx.multiplicativeOp(i - 1))) {
@@ -520,24 +481,20 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
                                 exprType = 2;
                                 continue;
                             default:
-                                this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                                System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                                this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                                 exprType = -1;
                         }
                     case 3:
-                        this.errorMsgs.add("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
-                        System.err.println("Error: line"+ ctx.start.getLine()+". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
+                        this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". La condicional " + ctx.multiplicativeOp(i - 1).getText() + " no valida con " + this.tipoDato(exprType) + " - " + this.tipoDato(exprType2) + ".");
                         exprType = -1;
                     default:
-                        this.errorMsgs.add("Error: line"+ ctx.start.getLine()+ ". "+ctx.getText() + " no es un tipo de dato válido!!!");
-                        System.err.println("Error: line"+ ctx.start.getLine()+ ". "+ctx.getText() + " no es un tipo de dato válido!!!");
+                        this.errorMsgs.add("Error: line" + ctx.start.getLine() + ". " + ctx.getText() + " no es un tipo de dato válido!!!");
                         exprType = -1;
                 }
             }
         }
         return exprType;
     }
-
 
     @Override
     public Object visitLiteral_Fact_AST(MiParserAS.Literal_Fact_ASTContext ctx) {
@@ -549,8 +506,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         MiParserAS.Identifier_ASTContext idContext = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier(0));
         SymbolsTable.Ident id = table.buscar(idContext.getText());
         if (id == null) {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+" \"" + idContext.getText() + "\" no ha sido declarado!!!");
-            System.err.println("Error: line "+ctx.start.getLine()+" \"" + idContext.getText() + "\" no ha sido declarado!!!");
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + " \"" + idContext.getText() + "\" no ha sido declarado!!!");
         } else {
             idContext.decl = id.declCtx;
             if (ctx.identifier(1) != null) {
@@ -568,8 +524,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitArrayLookup_Fact_AST(MiParserAS.ArrayLookup_Fact_ASTContext ctx) {
-        this.visit(ctx.arrayLookup());
-        return null;
+        return this.visit(ctx.arrayLookup());
     }
 
     @Override
@@ -590,8 +545,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitAllocExpress_Fact_AST(MiParserAS.AllocExpress_Fact_ASTContext ctx) {
-        this.visit(ctx.allocationExpression());
-        return null;
+        return this.visit(ctx.allocationExpression());
     }
 
     @Override
@@ -606,19 +560,15 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
             exprType = (int) this.visit(c);
             if (ctx.SUM() != null) {
                 if (exprType != 2) {
-                    this.errorMsgs.add("Error: line "+ctx.start.getLine()+". La expresión '" + ctx.SUM().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
-                    System.err.println("Error: line "+ctx.start.getLine()+". La expresión '" + ctx.SUM().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
-
+                    this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". La expresión '" + ctx.SUM().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
                 }
             } else if (ctx.SUB() != null) {
                 if (exprType != 2) {
-                    this.errorMsgs.add("Error: line "+ctx.start.getLine()+". La expresión '" + ctx.SUB().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
-                    System.err.println("Error: line "+ctx.start.getLine()+". La expresión '" + ctx.SUB().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
+                    this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". La expresión '" + ctx.SUB().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
                 }
             } else if (ctx.EXCLA() != null) {
                 if (exprType != 0) {
-                    this.errorMsgs.add("Error: line "+ctx.start.getLine()+". La expresión '" + ctx.EXCLA().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
-                    System.err.println("Error: line "+ctx.start.getLine()+". La expresión '" + ctx.EXCLA().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
+                    this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". La expresión '" + ctx.EXCLA().getText() + "' no valida con " + this.tipoDato(exprType) + ".");
                 }
             }
         }
@@ -627,13 +577,12 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitAllocExpress_AST(MiParserAS.AllocExpress_ASTContext ctx) {
-        MiParserAS.Identifier_ASTContext idToken = (MiParserAS.Identifier_ASTContext) this.visit(ctx.identifier());
         SymbolsTable.Ident id = table.buscar(ctx.identifier().getText());
         if (id == null) {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+". La clase '" + ctx.identifier().getText() + "' no ha sido creada.");
-            System.err.println("Error: line "+ctx.start.getLine()+". La clase '" + ctx.identifier().getText() + "' no ha sido creada.");
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". La clase '" + ctx.identifier().getText() + "' no ha sido creada.");
             return -1;
         }
+        idCurrent = id;
         return id.type;
     }
 
@@ -642,8 +591,7 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         int exprType = (int) this.visit(ctx.simpleType());
         int exprType2 = (int) this.visit(ctx.expression());
         if (exprType2 != 2) {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+". Para indicar el tamaño del arreglo, solo se permite con 'int' no " + this.tipoDato(exprType2) + ".");
-            System.err.println("Error: line "+ctx.start.getLine()+". Para indicar el tamaño del arreglo, solo se permite con 'int' no " + this.tipoDato(exprType2) + ".");
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". Para indicar el tamaño del arreglo, solo se permite con 'int' no " + this.tipoDato(exprType2) + ".");
         }
         return exprType;
     }
@@ -657,15 +605,10 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
     public Object visitFunctionCall_AST(MiParserAS.FunctionCall_ASTContext ctx) {
         this.idCurrent = table.buscar(ctx.identifier().getText());
         if (this.idCurrent == null) {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+". \"" + ctx.identifier().getText() + "\" no es un método declarado!!!");
-            System.err.println("Error: line "+ctx.start.getLine()+". \"" + ctx.identifier().getText() + "\" no es un método declarado!!!");
-            //throw new RuntimeException();
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". \"" + ctx.identifier().getText() + "\" no es un método declarado!!!");
             return null;
         } else {
-
             this.visit((ctx).actualParams());
-            //verificar que la cantidad de parametro y el tipo de los mismos concuerdan
-
             ctx.decl = this.idCurrent.declCtx;
             return this.idCurrent.type;
         }
@@ -677,16 +620,14 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
         MiParserAS.FormalParams_ASTContext b = (MiParserAS.FormalParams_ASTContext) a.formalParams();
         ctx.cantParams = ctx.expression().size();
         if (ctx.cantParams != b.cantParams) {
-            this.errorMsgs.add("Error: line "+ctx.start.getLine()+".  cantidad de parametros diferentes a la declaracion");
-            System.err.println("Error: line "+ctx.start.getLine()+".  cantidad de parametros diferentes a la declaracion");
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ".  cantidad de parametros diferentes a la declaracion");
         }
         for (int i = 0; i < b.cantParams; i++) {
             int val1 = (int) visit(ctx.expression(i));
             MiParserAS.FormalParam_ASTContext c = (MiParserAS.FormalParam_ASTContext) b.formalParam(i);
             SymbolsTable.Ident val2 = table.buscar(c.identifier().getText());
             if (val1 != val2.type) {
-                this.errorMsgs.add("El parametro " + i + " del método en la linea " + ctx.start.getLine() + ", no coicide con la declaración!!!!");
-                System.err.println("El parametro " + i + " del método en la linea " + ctx.start.getLine() + ", no coicide con la declaración!!!!");
+                this.errorMsgs.add("Error: line " + ctx.start.getLine() + ". El parametro " + i + " del método en la linea " + ctx.start.getLine() + ", no coicide con la declaración!!!!");
             }
         }
         return 0;
@@ -694,15 +635,22 @@ public class ContextualAnalysis extends MiParserASBaseVisitor<Object> {
 
     @Override
     public Object visitArrayLookup_AST(MiParserAS.ArrayLookup_ASTContext ctx) {
-        this.visit(ctx.identifier());
-        this.visit(ctx.expression());
-        return null;
+        SymbolsTable.Ident id = table.buscar(ctx.identifier().getText());
+        if (id == null) {
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ", la variable '" + ctx.identifier().getText() + "' no ha sido creada.");
+            return -1;
+        }
+        int exprType2 = (int) this.visit(ctx.expression());
+        if (exprType2 != 2) {
+            this.errorMsgs.add("Error: line " + ctx.start.getLine() + ", para indicar el tamaño del arreglo, solo se permite con 'int' no " + this.tipoDato(exprType2) + ".");
+            return -1;
+        }
+        return id.type;
     }
 
     @Override
     public Object visitArrayLen_AST(MiParserAS.ArrayLen_ASTContext ctx) {
-        this.visit(ctx.identifier());
-        return null;
+        return 2;
     }
 
     @Override
