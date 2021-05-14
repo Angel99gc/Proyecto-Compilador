@@ -52,10 +52,10 @@ public class Analisis {
                 ac.table.openScope();
                 ac.visit(tree);
                 if (ac.errorMsgs.size() > 0) {
-                    json.put("error", "Compilacion Fallida:  Error(es) Contextual(es):\n" + ListToString(ac.errorMsgs));
+                    json.put("error", "Compilación Fallida:  Error(es) Contextual(es):\n" + ListToString(ac.errorMsgs));
                     json.put("code", "400");
                 } else {
-                    json.put("data", "Compilacion Exitosa!!");
+                    json.put("data", "Compilación Exitosa!!");
                     json.put("code", "200");
                     System.out.println("Compilación Exitosa!!\n");
                 }
@@ -65,7 +65,7 @@ public class Analisis {
             }
             System.out.println("Compilación Exitosa!!\n");
         } else {
-            json.put("error", "Compilacion Fallida:  Error(es) Sintactico(s):\n" + errorListener.toString());
+            json.put("error", "Compilación Fallida:  Error(es) Sintáctico(s):\n" + errorListener.toString());
             json.put("code", "400");
             System.out.println("Compilación Fallida!!\n");
             System.out.println(errorListener.toString());
