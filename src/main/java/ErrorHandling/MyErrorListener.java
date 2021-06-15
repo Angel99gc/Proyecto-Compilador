@@ -1,7 +1,10 @@
 package ErrorHandling;
 
-import Generated.*;
-import org.antlr.v4.runtime.*;
+import Generated.MiParserAS;
+import Generated.MiScannerAS;
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 
 import java.util.ArrayList;
 

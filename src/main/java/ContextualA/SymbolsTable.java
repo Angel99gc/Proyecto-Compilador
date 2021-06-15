@@ -1,6 +1,7 @@
 package ContextualA;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 
 import java.util.LinkedList;
 
