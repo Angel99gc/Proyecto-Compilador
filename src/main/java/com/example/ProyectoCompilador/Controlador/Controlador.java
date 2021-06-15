@@ -20,7 +20,7 @@ public class Controlador{
     public String prueba(){
         return "nice";
     }
-    @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(name = "/analisis", consumes = MediaType.TEXT_PLAIN_VALUE)
     public Map<String, String> postAnalisis(@RequestBody() String code){
         return this.analisis.getAnalisisSintactico(code);
     }
